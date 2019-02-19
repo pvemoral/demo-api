@@ -1,6 +1,8 @@
 package com.api.demo.services;
 
 import com.api.demo.models.ModelEntity;
+import com.api.demo.models.ModelEntityDTO;
+import com.api.demo.repositories.EntityPersistence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class EntityServiceImpl implements EntityService {
 
-    private final ModelEntityRepository repository;
+    private final EntityPersistence repository;
 
     @Override
     public List<ModelEntity> findAll() {
@@ -23,17 +25,27 @@ public class EntityServiceImpl implements EntityService {
 
     @Override
     public Optional<ModelEntity> findByName(String name) {
-        return repository.findByEntityName(name);
+     //   return repository.findByEntityName(name);
+        return null;
 
     }
 
     @Override
-    public ModelEntity addEntity(ModelEntity entity) {
+    public Optional<ModelEntity> findById(Integer entityId) {
+
+        // return this.repository.findById(entityId);
         return null;
     }
 
     @Override
-    public ModelEntity updateEntity(ModelEntity entity) {
+    public ModelEntity addEntity(ModelEntityDTO entity) {
+
+        return repository.addEntity(entity);
+
+    }
+
+    @Override
+    public ModelEntity updateEntity(ModelEntityDTO entity) {
         return null;
     }
 

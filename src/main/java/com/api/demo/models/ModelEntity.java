@@ -14,4 +14,15 @@ public class ModelEntity {
 
     private String entityName;
 
+    public ModelEntity() {
+    }
+
+    public ModelEntity(String entityName) {
+        this.entityName = entityName;
+    }
+
+    public ModelEntity(Integer id, String entityName) {
+        this.id = id;
+        this.entityName = entityName;
+    }
 }
