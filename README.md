@@ -1,4 +1,4 @@
-##Project
+## Project
 
 An easy API REST microservice application based on Spring-boot as a Java's Framework using the following applications:
 - GitHub as a Git repository hosting service (https://github.com) 
@@ -23,7 +23,7 @@ The project is organized following the next structure:
 | -- controllers
 | -- services
 ```
-##Installation
+## Installation
 ```bash
 git clone https://github.com/pvemoral/demo-api.git
 ```
