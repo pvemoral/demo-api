@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,24 +27,30 @@ public class EntityController {
     }
 
     @GetMapping("/{entityId}")
-    public ResponseEntity<ModelEntity> getEntityById(
+    public ResponseEntity<?> getEntityById(
             @PathVariable Integer entityId) {
         Optional<ModelEntity> entity = this.service.findById(entityId);
-        return  ResponseEntity.of(entity);
-
-
+        if(entity.isPresent())
+            return ResponseEntity.of(entity);
+        else
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).contentType(MediaType.APPLICATION_JSON_UTF8).body("");
     }
 
     @PostMapping
     public ResponseEntity<ModelEntity> addEntity(
             @RequestBody ModelEntityDTO entity ) {
 
-      //  String name = entity.getEntityName();
-
         return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON_UTF8).body(this.service.addEntity(entity));
-
-
     }
+
+    @DeleteMapping("/{entityId}")
+    public ResponseEntity deleteEntityById(
+            @PathVariable Integer entityId) {
+            this.service.deleteEntity(entityId);
+
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON_UTF8).body("");
+    }
+
 
 
 }

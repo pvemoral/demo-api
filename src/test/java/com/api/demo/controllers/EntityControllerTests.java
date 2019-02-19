@@ -17,9 +17,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultHandler;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -35,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -102,10 +101,8 @@ public class EntityControllerTests {
         ModelEntity adrea_added = new ModelEntity(1,"Andrea");
 
         given(service.addEntity(andrea)).willReturn(adrea_added);
-       String json = mapper.writeValueAsString(andrea);
-       // String json = "{ \"entityName\" : \"Andrea Vilaro\" }";
+        String json = mapper.writeValueAsString(andrea);
 
-        System.out.println("JSON " + json);
         mvc.perform(post("/entities")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
@@ -114,14 +111,73 @@ public class EntityControllerTests {
                 .andExpect(jsonPath("$.id",is(adrea_added.getId())))
                 .andExpect(jsonPath("$.entityName",is(adrea_added.getEntityName())));
 
-      /*
+    }
 
-      .content(asJsonString(user)))
-            .andExpect(status().isConflict());
-    verify(userService, times(1)).exists(user
-       */
+    @Test
+    public void whenFindByIdinEmptyDB_thenReturnEmptyResult()
+            throws Exception {
+
+        this.entities = Collections.emptyList();
+
+        given(service.findById(1)).willReturn(Optional.empty());
+
+        mvc.perform(get("/entities/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
+    }
+
+    @Test
+    public void whenFindById_andIdNonExistOnDB_thenReturnEmptyResult()
+            throws Exception {
+
+        given(service.findById(1)).willReturn(Optional.empty());
+
+        mvc.perform(get("/entities/10")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
+    }
+
+    @Test
+    public void whenFindById_andIdExistOnDB_thenReturnEntityResult()
+            throws Exception {
+
+        ModelEntity ester  = new ModelEntity(1,"Ester");
+        given(service.findById(1)).willReturn(Optional.of(ester));
+
+
+        mvc.perform(get("/entities/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id",is(ester.getId())))
+                .andExpect(jsonPath("$.entityName",is(ester.getEntityName())));
     }
 
 
+    @Test
+    public void whenDeleteByIdNonExistId_thenReturnEmptyResultAndOK()
+            throws Exception {
 
+        this.entities = Collections.emptyList();
+
+        mvc.perform(MockMvcRequestBuilders
+                .delete("/entities/17")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+    }
+
+    @Test
+    public void whenDeleteByIdExistId_thenReturnEmptyResultAndOK()
+            throws Exception {
+
+        this.entities = Collections.emptyList();
+
+        mvc.perform(MockMvcRequestBuilders
+                .delete("/entities/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+    }
 }
