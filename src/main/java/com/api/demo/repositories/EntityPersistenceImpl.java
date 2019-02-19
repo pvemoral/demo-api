@@ -1,6 +1,7 @@
 package com.api.demo.repositories;
 
 import com.api.demo.models.ModelEntity;
+import com.api.demo.models.ModelEntityDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +26,17 @@ public class EntityPersistenceImpl implements EntityPersistence {
     }
 
     @Override
-    public ModelEntity addEntity(ModelEntity entity) {
+    public Optional<ModelEntity> findById(Integer entityId) {
+      //  return this.repository.findById(entityId);
         return null;
+    }
+
+    @Override
+    public ModelEntity addEntity(ModelEntityDTO entity) {
+
+       return repository.save(new ModelEntity(entity.getEntityName()));
+
+
     }
 
     @Override
