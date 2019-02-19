@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -38,7 +39,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void whenFindAllEntities_AndWeHaveMoreThanOneElement_thenReturnEntities() {
+    public void whenFindAllEntities_AndWeHaveMoreThanOneEntities_thenReturnEntities() {
         List<ModelEntity> all = this.entityService.findAll();
 
         assertNotNull(all);
@@ -47,7 +48,7 @@ public class EntityServiceImplTest {
     }
 
     @Test
-    public void whenFindAddEntity_thenHaveOneMoreElementThanBefore() {
+    public void whenAddEntity_thenHaveOneMoreEntitiesThanBefore() {
         List<ModelEntity> all_before = this.entityService.findAll();
 
         this.entityService.addEntity(new ModelEntityDTO("Andrea"));
@@ -60,4 +61,73 @@ public class EntityServiceImplTest {
         assertEquals(all_before.size() + 1, all.size());
 
     }
+
+    @Test
+    public void whenFindByIdExistEntity_thenGetEntity() {
+        Optional<ModelEntity> ester = this.entityService.findById(3);
+
+        assertNotNull(ester);
+        assertEquals(ester.get().getEntityName(),"Ester");
+        assertEquals(ester.get().getId().toString(),"3");
+    }
+
+    @Test
+    public void whenFindByIdNonExistEntity_thenGetEntity() {
+
+        Optional<ModelEntity> ester = this.entityService.findById(4);
+
+        assertEquals(ester,Optional.empty());
+
+    }
+
+    @Test
+    public void whenDeleteExistEntity_thenWeHaveOneLessEntitiesThanBefore() {
+
+        List<ModelEntity> all_before = this.entityService.findAll();
+
+        this.entityService.deleteEntity(2);
+
+        List<ModelEntity> all = this.entityService.findAll();
+
+        assertNotNull(all_before);
+        assertNotNull(all);
+        assertNotEquals(all_before.size(),all.size());
+        assertEquals(all_before.size() , all.size() + 1);
+    }
+
+    @Test
+    public void whenDeleteNonExistEntity_thenWeHaveTheSamesEntitiesThanBefore() {
+
+        List<ModelEntity> all_before = this.entityService.findAll();
+
+        this.entityService.deleteEntity(14);
+
+        List<ModelEntity> all = this.entityService.findAll();
+
+        assertNotNull(all_before);
+        assertNotNull(all);
+        assertEquals(all_before.size(),all.size());
+    }
+
+
+    @Test
+    public void whenDeleteExistEntity_thenFindByIdReturnEmpty() {
+        this.entityService.deleteEntity(1);
+
+        Optional<ModelEntity> ester = this.entityService.findById(1);
+
+        assertEquals(ester,Optional.empty());
+
+    }
+
+    @Test
+    public void whenDeleteNonExistEntity_thenFindByIdReturnEmpty() {
+        this.entityService.deleteEntity(10);
+
+        Optional<ModelEntity> ester = this.entityService.findById(10);
+
+        assertEquals(ester,Optional.empty());
+
+    }
+
 }

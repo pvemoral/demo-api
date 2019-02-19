@@ -24,17 +24,8 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Optional<ModelEntity> findByName(String name) {
-     //   return repository.findByEntityName(name);
-        return null;
-
-    }
-
-    @Override
     public Optional<ModelEntity> findById(Integer entityId) {
-
-        // return this.repository.findById(entityId);
-        return null;
+        return this.repository.findById(entityId);
     }
 
     @Override
@@ -50,7 +41,8 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public void deleteEntity(Integer id) {
+    public void deleteEntity(Integer entityId) {
+        repository.deleteById(entityId);
 
     }
 }

@@ -14,7 +14,4 @@ public interface ModelEntityRepository extends JpaRepository<ModelEntity, Intege
 
     List<ModelEntity> findAll();
 
-    Optional<ModelEntity> findByEntityName(String name);
-
-
 }
