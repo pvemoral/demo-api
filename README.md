@@ -36,3 +36,12 @@ Use the following sentence to check the Jacoco Test Report
 ```bash
 ./gradlew build jacocoTestReport
 ```
+
+## Exposed methods
+
+* GET /entities
+* GET /entities/{entityId}
+* POST /entities
+    * Body 
+{    "entityName" : "Ester Vilaro"}
+* DELETE /entities/{entityId}
