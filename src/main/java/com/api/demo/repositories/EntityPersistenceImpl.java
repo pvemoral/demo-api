@@ -31,8 +31,10 @@ public class EntityPersistenceImpl implements EntityPersistence {
     }
 
     @Override
-    public ModelEntity updateEntity(ModelEntity entity) {
-        return null;
+    public ModelEntity updateEntity(Integer entityId, ModelEntityDTO entity) {
+
+        return repository.save(new ModelEntity(entityId, entity.getEntityName()));
+
     }
 
     @Override

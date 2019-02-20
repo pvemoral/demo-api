@@ -11,6 +11,6 @@ public interface EntityPersistence {
     List<ModelEntity> findAll();
     Optional<ModelEntity> findById(Integer entityId);
     ModelEntity addEntity(ModelEntityDTO entity);
-    ModelEntity updateEntity(ModelEntity entity);
+    ModelEntity updateEntity(Integer entityId, ModelEntityDTO entity);
     void deleteById(Integer entityId);
 }
