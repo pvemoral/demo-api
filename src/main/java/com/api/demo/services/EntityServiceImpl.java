@@ -36,8 +36,9 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public ModelEntity updateEntity(ModelEntityDTO entity) {
-        return null;
+    public ModelEntity updateEntity(Integer entityId, ModelEntityDTO entity) {
+        return repository.updateEntity(entityId, entity);
+
     }
 
     @Override

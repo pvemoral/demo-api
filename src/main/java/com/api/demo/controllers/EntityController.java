@@ -27,7 +27,7 @@ public class EntityController {
     }
 
     @GetMapping("/{entityId}")
-    public ResponseEntity<?> getEntityById(
+    public ResponseEntity getEntityById(
             @PathVariable Integer entityId) {
         Optional<ModelEntity> entity = this.service.findById(entityId);
         if(entity.isPresent())
@@ -46,11 +46,25 @@ public class EntityController {
     @DeleteMapping("/{entityId}")
     public ResponseEntity deleteEntityById(
             @PathVariable Integer entityId) {
-            this.service.deleteEntity(entityId);
+        this.service.deleteEntity(entityId);
 
-            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON_UTF8).body("");
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON_UTF8).body("");
     }
 
+    @PutMapping("/{entityId}")
+    public ResponseEntity updateEntity(
+            @PathVariable Integer entityId,
+            @RequestBody ModelEntityDTO entity ) {
 
+        Optional<ModelEntity> foundEntity = this.service.findById(entityId);
+
+        if(!foundEntity.isPresent()) {
+           return ResponseEntity.noContent().build();
+        }
+
+        ModelEntity entityUpdated = this.service.updateEntity(entityId, entity);
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON_UTF8).body(entityUpdated);
+
+    }
 
 }

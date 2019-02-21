@@ -32,7 +32,7 @@ public class EntityServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        this.entityManager.persist(new ModelEntity("Ester"));
+        this.repository.save(new ModelEntity(1,"Ester"));
 
         this.entityPersistence = new EntityPersistenceImpl(this.repository);
         this.entityService = new EntityServiceImpl(this.entityPersistence);
@@ -64,11 +64,11 @@ public class EntityServiceImplTest {
 
     @Test
     public void whenFindByIdExistEntity_thenGetEntity() {
-        Optional<ModelEntity> ester = this.entityService.findById(3);
+        Optional<ModelEntity> ester = this.entityService.findById(1);
 
         assertNotNull(ester);
         assertEquals(ester.get().getEntityName(),"Ester");
-        assertEquals(ester.get().getId().toString(),"3");
+        assertEquals(ester.get().getId().toString(),"1");
     }
 
     @Test
@@ -129,5 +129,27 @@ public class EntityServiceImplTest {
         assertEquals(ester,Optional.empty());
 
     }
+
+    @Test
+    public void whenUpdatedExistEntity_thenFindByIdReturnUpdatedEntity() {
+
+        this.entityService.updateEntity(1, new ModelEntityDTO("Andrea"));
+
+        Optional<ModelEntity> ester = this.entityService.findById(1);
+
+        assertEquals(ester.get().getEntityName(),"Andrea");
+
+    }
+
+    @Test
+    public void whenUpdatedNonExistEntity_thenFindByIdReturnEmpty() {
+        this.entityService.updateEntity(10, new ModelEntityDTO("Andrea") );
+
+        Optional<ModelEntity> ester = this.entityService.findById(10);
+
+        assertEquals(ester,Optional.empty());
+
+    }
+
 
 }

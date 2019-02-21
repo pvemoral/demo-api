@@ -14,21 +14,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -59,7 +67,7 @@ public class EntityControllerTests {
 
     @Before
     public void setUp() {
-        this.entities = Collections.singletonList(new ModelEntity("Ester"));
+        this.entities = Collections.singletonList(new ModelEntity(1,"Ester"));
 
     }
 
@@ -98,9 +106,9 @@ public class EntityControllerTests {
         this.entities = Collections.emptyList();
 
         ModelEntityDTO andrea = new ModelEntityDTO("Andrea");
-        ModelEntity adrea_added = new ModelEntity(1,"Andrea");
+        ModelEntity andreaAdded = new ModelEntity(1,"Andrea");
 
-        given(service.addEntity(andrea)).willReturn(adrea_added);
+        given(service.addEntity(andrea)).willReturn(andreaAdded);
         String json = mapper.writeValueAsString(andrea);
 
         mvc.perform(post("/entities")
@@ -108,8 +116,8 @@ public class EntityControllerTests {
                 .content(json))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.id",is(adrea_added.getId())))
-                .andExpect(jsonPath("$.entityName",is(adrea_added.getEntityName())));
+                .andExpect(jsonPath("$.id",is(andreaAdded.getId())))
+                .andExpect(jsonPath("$.entityName",is(andreaAdded.getEntityName())));
 
     }
 
@@ -161,8 +169,7 @@ public class EntityControllerTests {
 
         this.entities = Collections.emptyList();
 
-        mvc.perform(MockMvcRequestBuilders
-                .delete("/entities/17")
+        mvc.perform(delete("/entities/17")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
@@ -174,10 +181,50 @@ public class EntityControllerTests {
 
         this.entities = Collections.emptyList();
 
-        mvc.perform(MockMvcRequestBuilders
-                .delete("/entities/1")
+        mvc.perform(delete("/entities/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
     }
+
+    @Test
+    public void whenUpdateById_andIdNonExistOnDB_thenReturnEmptyResult()
+            throws Exception {
+        ModelEntityDTO andrea = new ModelEntityDTO("Andrea");
+
+        given(service.updateEntity(10,andrea)).willReturn(null);
+
+        String json = mapper.writeValueAsString(andrea);
+
+        mvc.perform(put("/entities/10")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(json))
+                .andDo(print())
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
+    }
+
+    @Test
+    public void whenUpdateById_andIdExistOnDB_thenReturnUpdatedEntityResult()
+            throws Exception {
+
+        ModelEntityDTO andrea  = new ModelEntityDTO("Andrea");
+        ModelEntity adreaUpdated = new ModelEntity(1,"Andrea");
+
+        String json = mapper.writeValueAsString(andrea);
+
+        given(service.findById(1)).willReturn(Optional.of(adreaUpdated));
+        given(service.updateEntity(1,andrea)).willReturn(adreaUpdated);
+
+        mvc.perform(put("/entities/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(json))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id",is(adreaUpdated.getId())))
+                .andExpect(jsonPath("$.entityName",is(adreaUpdated.getEntityName())));
+
+        verify(service,times(1)).updateEntity(anyInt(),any(ModelEntityDTO.class));
+        verify(service,times(1)).findById(anyInt());
+    }
+
 }

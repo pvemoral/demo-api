@@ -10,7 +10,7 @@ public interface EntityService {
     List<ModelEntity> findAll();
     Optional<ModelEntity> findById(Integer entityId);
     ModelEntity addEntity(ModelEntityDTO entity);
-    ModelEntity updateEntity(ModelEntityDTO entity);
+    ModelEntity updateEntity(Integer entityId, ModelEntityDTO entity);
     void deleteEntity(Integer entityId);
 
 
