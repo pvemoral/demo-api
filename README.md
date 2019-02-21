@@ -3,6 +3,7 @@
 An easy API REST microservice application based on Spring-boot as a Java's Framework using the following applications:
 - GitHub as a Git repository hosting service (https://github.com) 
 - Gradle as a building tool. (https://gradle.org/)
+- Swagger tool (https://swagger.io/)
 - Spring Data JPA to store and retrieve data in a relational database.
 - H2 a Java SQL in-memory databases (http://www.h2database.com)
 - JaCoCo as a Java Code Coverage Library (Test code coverage - https://www.eclemma.org/jacoco)
@@ -45,3 +46,9 @@ Use the following sentence to check the Jacoco Test Report
     * Body 
 {    "entityName" : "Ester Vilaro"}
 * DELETE /entities/{entityId}
+* PUT /entities/{entityId}
+    * Body 
+{    "entityName" : "Ester Vilaro"}
+
+## Swagger tool URL
+* http://xxxxxxx:xxxx/swagger-ui.html
