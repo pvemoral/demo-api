@@ -91,6 +91,8 @@ After running this command, you can find the report at: `build/reports/jacoco/te
 
 The service exposes the following RESTful endpoints:
 
+### Entity Endpoints
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET    | `/entities` | Retrieve all entities |
@@ -98,6 +100,16 @@ The service exposes the following RESTful endpoints:
 | POST   | `/entities` | Create a new entity |
 | PUT    | `/entities/{entityId}` | Update an existing entity |
 | DELETE | `/entities/{entityId}` | Delete an entity |
+
+### Customer Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET    | `/customers` | Retrieve all customers |
+| GET    | `/customers/{customerId}` | Retrieve a specific customer |
+| POST   | `/customers` | Create a new customer |
+| PUT    | `/customers/{customerId}` | Update an existing customer |
+| DELETE | `/customers/{customerId}` | Delete a customer |
 
 ### Example Requests
 
@@ -114,6 +126,26 @@ POST /entities
 PUT /entities/{entityId}
 {
     "entityName": "Updated Entity Name"
+}
+```
+
+#### Create Customer
+```json
+POST /customers
+{
+    "firstName": "John",
+    "lastName": "Doe",
+    "dni": "12345678X"
+}
+```
+
+#### Update Customer
+```json
+PUT /customers/{customerId}
+{
+    "firstName": "John",
+    "lastName": "Smith",
+    "dni": "12345678X"
 }
 ```
 
