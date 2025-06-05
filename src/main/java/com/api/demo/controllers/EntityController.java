@@ -3,7 +3,6 @@ package com.api.demo.controllers;
 import com.api.demo.models.ModelEntity;
 import com.api.demo.models.ModelEntityDTO;
 import com.api.demo.services.EntityService;
-import jdk.nashorn.internal.ir.Optimistic;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

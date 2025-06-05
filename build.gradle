@@ -29,11 +29,10 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile group: 'io.rest-assured', name: 'json-schema-validator', version: '3.0.3'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	compileOnly 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.4' // Explicitly set Lombok version
+	annotationProcessor 'org.projectlombok:lombok:1.18.4' // For annotation processing
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
     testCompile group: 'org.springframework.security', name: 'spring-security-test'
-    testCompile group: 'junit', name: 'junit'
     testCompile group: 'com.h2database', name: 'h2'
 }
